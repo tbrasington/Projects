@@ -1,0 +1,14 @@
+#viewable-text
+{ 
+	position: relative; 
+	width: 800px; 
+	height: 400px; 
+	color: #3a3a3a;
+	background-color: #f3f3f3;
+	font-family: Monaco;
+	font-size: 20px;
+	line-height: 26px;
+}
+#hidden-input { 
+	display: none;
+}
