@@ -9,11 +9,14 @@ var editor = function() {
 		input_field : null
 	},
 	
-	this.text = '',
+	this.text = null,
+	this.text_array = null,
 	
 	this.init = function(parameters)
 	{
 		that.events();	
+		
+		that.text = that.elements.viewable_text.text();
 	},
 	
 	this.events = function() { 
@@ -21,6 +24,11 @@ var editor = function() {
 		var typing = false, selection, text;
 		var cursor_position = 0;
 		var selection_start=0, selection_end = 0;
+		
+		// A string of the selected text
+		var selected_text; 
+		// Array of the text that isn't selected
+		var remaining_text; 
 		
 		that.elements.viewable_text.on('mouseup', function(e) { 
 			
@@ -38,7 +46,7 @@ var editor = function() {
 			}
 			
 			// Get the text
-			text = selection.toString();
+			selected_text = selection.toString();
 			
 			// Update positions to slice array 
 			cursor_position = selection.baseOffset;
@@ -50,15 +58,20 @@ var editor = function() {
 			console.log(selection.baseNode.length)
 			
 			// Get the text that isn't selected to rebuild if they hit back space
-			console.log(that.elements.viewable_text.text().split(selection.toString()))
-		
+			remaining_text = that.elements.viewable_text.text().split(selected_text);
+			console.log(' length ' + selected_text.length)
+					
 		}).on('click', function(){
 			typing = true;
 		});
 		
 		$(document).on('keydown',function(e){
 			if(!typing) return;
-			if(e.keyCode==8) e.preventDefault(); 
+			// Back space
+			if(e.keyCode==8)
+			{
+				e.preventDefault();
+			} 
 			
 			
 		}).on('keyup',function(e){
