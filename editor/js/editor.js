@@ -18,8 +18,23 @@ var editor = function() {
 	this.events = function() { 
 		
 		var typing = false;
+		var range = '';
+		var referenceNode;
 		
-		that.elements.viewable_text.on('click', function(){
+		that.elements.viewable_text.on('mouseup', function(e) { 
+		
+			 var text = '';
+          if(window.getSelection){
+            text = window.getSelection();
+          }else if(document.getSelection){
+            text = document.getSelection();
+          }else if(document.selection){
+            text = document.selection.createRange().text;
+          }
+          text=text.toString();
+          console.log(text)
+		
+		}).on('click', function(){
 			typing = true;
 		});
 		
