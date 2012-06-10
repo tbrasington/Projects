@@ -5,6 +5,7 @@ var editor = function() {
 	this.elements = {
 		
 		viewable_text : null, 
+		cursor : null, 
 		input_field : null
 	},
 	
@@ -17,39 +18,66 @@ var editor = function() {
 	
 	this.events = function() { 
 		
-		var typing = false;
-		var range = '';
-		var referenceNode;
+		var typing = false, selection, text;
+		var cursor_position = 0;
+		var selection_start=0, selection_end = 0;
 		
 		that.elements.viewable_text.on('mouseup', function(e) { 
+			
+			if(window.getSelection)
+			{
+				selection = window.getSelection();
+			}
+				else if(document.getSelection)
+			{
+				selection = document.getSelection();
+			}
+				else if(document.selection)
+			{
+				selection = document.selection.createRange().text;
+			}
+			
+			// Get the text
+			text = selection.toString();
+			
+			// Update positions to slice array 
+			cursor_position = selection.baseOffset;
+			selection_start = selection.baseOffset;
+			selection_end = selection.extentOffset;
 		
-			 var text = '';
-          if(window.getSelection){
-            text = window.getSelection();
-          }else if(document.getSelection){
-            text = document.getSelection();
-          }else if(document.selection){
-            text = document.selection.createRange().text;
-          }
-          text=text.toString();
-          console.log(text)
+			console.log(selection.baseOffset)
+			console.log(selection.extentOffset)
+			console.log(selection.baseNode.length)
+			
+			// Get the text that isn't selected to rebuild if they hit back space
+			console.log(that.elements.viewable_text.text().split(selection.toString()))
 		
 		}).on('click', function(){
 			typing = true;
 		});
 		
-		$(document).on('keypress', function(e) { 
+		$(document).on('keydown',function(e){
+			if(!typing) return;
+			if(e.keyCode==8) e.preventDefault(); 
+			
+			
+		}).on('keyup',function(e){
+			if(!typing) return;
+			if(e.keyCode==8) e.preventDefault();
+			
+		}).on('keypress', function(e) { 
 			
 			if(!typing) return;
 			
-			e.preventDefault();
-			
+			e.preventDefault(); 
 			// focus on input text to bring up ios somehow
-			
 			var raw_unicode_character = (typeof e.which == "number") ? e.which : e.keyCode;
 			var html_character = String.fromCharCode(raw_unicode_character);
     
-			that.elements.viewable_text.html(that.text+=html_character)
+			that.elements.viewable_text.html(that.text+=html_character);
+			
+			
+			
 			
 		});
 		

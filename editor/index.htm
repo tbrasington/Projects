@@ -17,7 +17,7 @@
  
 <div id="content">
 
-	<div id="viewable-text"></div>
+	<div id="viewable-text">Some sample text<span id="cursor" class="cursor"></span></div>
 	
 	<div id="hidden-input"><textarea></textarea></div>
 
@@ -35,6 +35,7 @@ $(document).ready(function(){
 		
 		my_first_editor.elements.viewable_text=$('#viewable-text'); 
 		my_first_editor.elements.input_field=$('#hidden-input'); 
+		my_first_editor.elements.cursor=$('#cursor'); 
 		
 		
 		my_first_editor.init();
