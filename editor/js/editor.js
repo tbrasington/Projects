@@ -71,6 +71,9 @@ var editor = function() {
 			if(e.keyCode==8)
 			{
 				e.preventDefault();
+				
+				that.elements.viewable_text.html(that.text.substr(0, that.text.length-1));
+				that.text = that.elements.viewable_text.text();
 			} 
 			
 			
@@ -86,8 +89,8 @@ var editor = function() {
 			// focus on input text to bring up ios somehow
 			var raw_unicode_character = (typeof e.which == "number") ? e.which : e.keyCode;
 			var html_character = String.fromCharCode(raw_unicode_character);
-    
-			that.elements.viewable_text.html(that.text+=html_character);
+			that.text = that.text+=html_character
+			that.elements.viewable_text.html(that.text);
 			
 			
 			
