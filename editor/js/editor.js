@@ -12,6 +12,15 @@ var editor = function() {
 	this.text = null,
 	this.text_array = null,
 	
+	
+	this.selection;
+	this.cursor_position;
+	this.selection_start;
+	this.selection_end;
+	
+	
+	this.ctrlz;
+	
 	this.init = function(parameters)
 	{
 		that.events();	
@@ -34,32 +43,31 @@ var editor = function() {
 			
 			if(window.getSelection)
 			{
-				selection = window.getSelection();
+				that.selection = window.getSelection();
 			}
 				else if(document.getSelection)
 			{
-				selection = document.getSelection();
+				that.selection = document.getSelection();
 			}
 				else if(document.selection)
 			{
-				selection = document.selection.createRange().text;
+				that.selection = document.selection.createRange().text;
 			}
 			
 			// Get the text
-			selected_text = selection.toString();
+			that.selected_text = that.selection.toString();
 			
 			// Update positions to slice array 
-			cursor_position = selection.baseOffset;
-			selection_start = selection.baseOffset;
-			selection_end = selection.extentOffset;
+			that.cursor_position = that.selection.baseOffset;
+			that.selection_start = that.selection.baseOffset;
+			that.selection_end = that.selection.extentOffset;
 		
-			console.log(selection.baseOffset)
-			console.log(selection.extentOffset)
-			console.log(selection.baseNode.length)
 			
 			// Get the text that isn't selected to rebuild if they hit back space
-			remaining_text = that.elements.viewable_text.text().split(selected_text);
-			console.log(' length ' + selected_text.length)
+			that.remaining_text = that.elements.viewable_text.text().split(that.selected_text);
+			
+			
+			console.log(' length ' + that.selected_text.length)
 					
 		}).on('click', function(){
 			typing = true;
@@ -71,15 +79,28 @@ var editor = function() {
 			if(e.keyCode==8)
 			{
 				e.preventDefault();
-				
-				that.elements.viewable_text.html(that.text.substr(0, that.text.length-1));
-				that.text = that.elements.viewable_text.text();
-			} 
 			
+			}
 			
 		}).on('keyup',function(e){
 			if(!typing) return;
-			if(e.keyCode==8) e.preventDefault();
+			if(e.keyCode==8) 
+			{
+				e.preventDefault();
+				
+				console.log(that.selection.baseOffset)
+				console.log(that.selection.extentOffset)
+								that.ctrlz= that.text.substr(that.selection.baseOffset, that.selection.extentOffset)
+				
+				//that.elements.viewable_text.html(that.text.substr(0, that.text.length-1));
+				
+				
+				that.elements.viewable_text.html(that.text.slice(that.selection.baseOffset, that.selection.extentOffset));
+				// need to get adjoining strings and merge them together
+				that.text = that.elements.viewable_text.text();
+			
+			
+			}
 			
 		}).on('keypress', function(e) { 
 			
