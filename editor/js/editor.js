@@ -63,11 +63,12 @@ var editor = function() {
 			that.selection_end = that.selection.extentOffset;
 		
 			
-			// Get the text that isn't selected to rebuild if they hit back space
+		
+				// Get the text that isn't selected to rebuild if they hit back space
 			that.remaining_text = that.elements.viewable_text.text().split(that.selected_text);
 			
 			
-			console.log(' length ' + that.selected_text.length)
+			console.log(' length ' + that.remaining_text)
 					
 		}).on('click', function(){
 			typing = true;
@@ -87,17 +88,27 @@ var editor = function() {
 			if(e.keyCode==8) 
 			{
 				e.preventDefault();
-				
-				console.log(that.selection.baseOffset)
-				console.log(that.selection.extentOffset)
+				var text_selection='',remainging_text='';
 								that.ctrlz= that.text.substr(that.selection.baseOffset, that.selection.extentOffset)
 				
-				//that.elements.viewable_text.html(that.text.substr(0, that.text.length-1));
-				
-				
-				that.elements.viewable_text.html(that.text.slice(that.selection.baseOffset, that.selection.extentOffset));
-				// need to get adjoining strings and merge them together
+				// Make sure the text is up to date with the latest string
 				that.text = that.elements.viewable_text.text();
+				
+				// delete the previous character
+				if(that.selected_text.length<=0) 
+				{
+					that.elements.viewable_text.html(that.text.substr(0, that.text.length-1));
+				}
+					else
+				{
+					// this will remove the selected text from the string
+					that.elements.viewable_text.html(that.text.slice(0,that.selection.baseOffset)+ that.elements.cursor + that.text.slice(that.selection.extentOffset,that.text.length) );
+				}
+				
+				
+				//that.elements.viewable_text.html(that.text.slice(that.selection.baseOffset, that.selection.extentOffset));
+				// need to get adjoining strings and merge them together
+				//that.text = that.elements.viewable_text.text();
 			
 			
 			}
